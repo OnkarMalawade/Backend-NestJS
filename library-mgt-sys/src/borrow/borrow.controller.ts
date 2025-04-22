@@ -1,34 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Param, Body } from '@nestjs/common';
 import { BorrowService } from './borrow.service';
-import { CreateBorrowDto } from './dto/create-borrow.dto';
-import { UpdateBorrowDto } from './dto/update-borrow.dto';
+import { BorrowDto } from './dto/borrow.dto';
 
-@Controller('borrow')
+@Controller()
 export class BorrowController {
   constructor(private readonly borrowService: BorrowService) {}
 
-  @Post()
-  create(@Body() createBorrowDto: CreateBorrowDto) {
-    return this.borrowService.create(createBorrowDto);
+  @Post('borrow')
+  borrow(@Body() dto: BorrowDto) {
+    return this.borrowService.borrow(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.borrowService.findAll();
+  @Post('return/:id')
+  return(@Param('id') id: number) {
+    return this.borrowService.returnBook(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.borrowService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBorrowDto: UpdateBorrowDto) {
-    return this.borrowService.update(+id, updateBorrowDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.borrowService.remove(+id);
+  @Get('reports/overdue')
+  getOverdue() {
+    return this.borrowService.getOverdueBooks();
   }
 }
