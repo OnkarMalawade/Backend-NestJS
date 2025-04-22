@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -10,5 +16,6 @@ export class Tweet {
   content: string;
 
   @ManyToOne(() => User, (user) => user.tweets)
+  @JoinColumn({ name: 'userId' })
   user: User;
 }
