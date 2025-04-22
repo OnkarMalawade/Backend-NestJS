@@ -8,6 +8,8 @@ import {
   Put,
   Delete,
   ParseIntPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { QueryDto } from '../dto/query.dto';
@@ -19,6 +21,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   async getAll(@Query() query: QueryDto) {
     return this.userService.findAll(query);
   }
