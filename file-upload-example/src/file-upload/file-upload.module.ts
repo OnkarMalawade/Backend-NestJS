@@ -10,10 +10,10 @@ import { extname } from 'path';
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const filename = `${Date.now()}-${file.originalname}-${Math.round(Math.random() * 1e9)}`;
           const ext = extname(file.originalname);
-          const filenameCnf = `${filename}${ext}`;
-          cb(null, filenameCnf);
+          const name = file.originalname.replace(ext, '').replace(/\s+/g, '-');
+          const filename = `${Date.now()}-${name}-${Math.round(Math.random() * 1e9)}${ext}`;
+          cb(null, filename);
         },
       }),
     }),

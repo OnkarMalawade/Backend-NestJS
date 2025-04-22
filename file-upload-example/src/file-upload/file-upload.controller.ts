@@ -8,8 +8,9 @@ import {
   HttpStatus,
   Param,
   Res,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
 import { join } from 'path';
 import { existsSync } from 'fs';
@@ -29,6 +30,20 @@ export class FileUploadController {
       filename: file.filename,
       path: this.fileUploadService.getFileUrl(file.filename),
     };
+  }
+
+  @Post('upload-multiple')
+  @UseInterceptors(FilesInterceptor('files', 10)) // up to 10 files
+  uploadMultipleFiles(@UploadedFiles() files: Express.Multer.File[]) {
+    if (!files || files.length === 0) {
+      throw new HttpException('No files uploaded', HttpStatus.BAD_REQUEST);
+    }
+
+    return files.map((file) => ({
+      originalName: file.originalname,
+      filename: file.filename,
+      path: this.fileUploadService.getFileUrl(file.filename),
+    }));
   }
 
   @Get(':filename')

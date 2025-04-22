@@ -28,6 +28,17 @@ export class FileUploadService {
     return { message: 'File uploaded successfully', filePath: file.path };
   }
 
+  handleMultipleFileUpload(files: Express.Multer.File[]) {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('no files uploaded');
+    }
+
+    return files.map((file) => ({
+      message: 'File uploaded successfully',
+      filePath: file.path,
+    }));
+  }
+
   getFileUrl(filename: string): string {
     const filePath = join(process.cwd(), 'uploads', filename);
 
