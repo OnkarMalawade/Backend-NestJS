@@ -1,8 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Book } from './entities/book.entity';
-import { Member } from './entities/member.entity';
-import { Borrow } from './entities/borrow-record.entity';
+import { Book } from './book/entities/book.entity';
+import { Member } from './members/entities/member.entity';
+import { Borrow } from './borrow/entities/borrow.entity';
+
+import { MembersModule } from './members/members.module';
+import { BookModule } from './book/book.module';
+import { BorrowModule } from './borrow/borrow.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -17,7 +23,13 @@ import { Borrow } from './entities/borrow-record.entity';
       synchronize: true,
       logging: true,
     }),
-    TypeOrmModule.forFeature([Book, Member, BorrowRecord]),
+
+    // Register the feature modules
+    MembersModule,
+    BookModule,
+    BorrowModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

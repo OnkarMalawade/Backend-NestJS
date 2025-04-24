@@ -5,11 +5,11 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Book } from './book.entity';
-import { Member } from './member.entity';
+import { Book } from '../../book/entities/book.entity';
+import { Member } from '../../members/entities/member.entity';
 
 @Entity()
-export class BorrowRecord {
+export class Borrow {
   @PrimaryGeneratedColumn()
   id: number;
 

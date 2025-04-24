@@ -1,13 +1,13 @@
-import { Controller, Post, Param, Body } from '@nestjs/common';
+import { Controller, Post, Param, Body, Get } from '@nestjs/common';
 import { BorrowService } from './borrow.service';
-import { BorrowDto } from './dto/borrow.dto';
+import { CreateBorrowDto } from './dto/create-borrow.dto';
 
 @Controller()
 export class BorrowController {
   constructor(private readonly borrowService: BorrowService) {}
 
   @Post('borrow')
-  borrow(@Body() dto: BorrowDto) {
+  borrow(@Body() dto: CreateBorrowDto) {
     return this.borrowService.borrow(dto);
   }
 

@@ -5,23 +5,22 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan, IsNull, LessThan } from 'typeorm';
-import { BorrowRecord } from './entities/borrow-record.entity';
-import { Book } from './entities/book.entity';
-import { Member } from './entities/member.entity';
-import { BorrowDto } from './dto/borrow.dto';
+import { Borrow } from './entities/borrow.entity';
+import { Book } from '../book/entities/book.entity';
+import { Member } from '../members/entities/member.entity';
+import { CreateBorrowDto } from './dto/create-borrow.dto';
 
 @Injectable()
 export class BorrowService {
   constructor(
-    @InjectRepository(BorrowRecord)
-    private readonly borrowRepo: Repository<BorrowRecord>,
+    @InjectRepository(Borrow)
+    private readonly borrowRepo: Repository<Borrow>,
     @InjectRepository(Book)
     private readonly bookRepo: Repository<Book>,
     @InjectRepository(Member)
     private readonly memberRepo: Repository<Member>,
   ) {}
-
-  async borrow(dto: BorrowDto) {
+  async borrow(dto: CreateBorrowDto) {
     const book = await this.bookRepo.findOne({ where: { id: dto.bookId } });
     if (!book || book.quantity <= 0)
       throw new NotFoundException('Book not available');
@@ -29,13 +28,15 @@ export class BorrowService {
     const member = await this.memberRepo.findOne({
       where: { id: dto.memberId },
     });
+    if (!member) throw new NotFoundException('Member not found');
 
     const borrowRecord = this.borrowRepo.create({
       book,
       member,
       borrowDate: new Date(),
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days later
     });
+
     await this.borrowRepo.save(borrowRecord);
 
     book.quantity--;

@@ -1,10 +1,10 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
+  Get,
   Param,
+  Patch,
   Delete,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
@@ -17,7 +17,7 @@ export class MembersController {
 
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
-    return this.membersService.create(createMemberDto);
+    return this.membersService.createMem(createMemberDto);
   }
 
   @Get()
@@ -26,17 +26,17 @@ export class MembersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     return this.membersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateMemberDto: UpdateMemberDto) {
+  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
     return this.membersService.update(+id, updateMemberDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
     return this.membersService.remove(+id);
   }
 }
